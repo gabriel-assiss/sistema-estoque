@@ -20,7 +20,7 @@ public class FornecedorService {
     }
 
     public Fornecedor salvar(Fornecedor fornecedor) {
-        if(fornecedorRepository.existsById(fornecedor.getId())){
+        if(fornecedorRepository.existsByCnpj(fornecedor.getCnpj())){
             throw new FornecedorExistenteException("Fornecedor já existe");
         }else{
             return fornecedorRepository.save(fornecedor);
@@ -31,9 +31,11 @@ public class FornecedorService {
         return fornecedorRepository.findAll();
     }
 
-    public Optional<Fornecedor> buscarPorId(Long id) {
+    public Fornecedor buscarPorId(Long id) {
 
-        return fornecedorRepository.findById(id);
+        return fornecedorRepository.findById(id).orElseThrow(
+                ()-> new FornecedorNaoEncontradoException("Fornecedor não encontrado")
+        );
     }
 
     public Fornecedor inativarFornecedor(Long idFornecedor){
@@ -55,8 +57,12 @@ public class FornecedorService {
         return fornecedorRepository.save(fornecedor);
     }
 
-    public Fornecedor atualizar(Long id, Fornecedor fornecedor) {
-        fornecedor.setId(id);
+    public Fornecedor atualizaNome(Long id,String nome) {
+        Fornecedor fornecedor = fornecedorRepository.findById(id).orElseThrow(
+                ()-> new FornecedorNaoEncontradoException("Fornecedor não encontrado")
+                );
+        fornecedor.setNome(nome);
         return fornecedorRepository.save(fornecedor);
     }
+
 }
