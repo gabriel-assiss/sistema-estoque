@@ -24,6 +24,9 @@ public class Fornecedor {
     @Column(name = "nome", nullable = false)
     private String nome;
 
+    @Column(name = "cnpj", unique = true, nullable = false)
+    private String cnpj;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status_fornecedor")
     private StatusFornecedor statusFornecedor;
@@ -38,6 +41,14 @@ public class Fornecedor {
         this.id = id;
         this.nome = nome;
         this.statusFornecedor = statusFornecedor;
+    }
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     public Long getId() {
