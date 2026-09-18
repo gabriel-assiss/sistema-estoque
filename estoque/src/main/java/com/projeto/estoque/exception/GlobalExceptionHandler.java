@@ -34,5 +34,8 @@ public class GlobalExceptionHandler {
     } @ExceptionHandler(StatusInvalidoException.class)
     public ResponseEntity<String> statusinvalido(StatusInvalidoException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }@ExceptionHandler(FornecedorExistenteException.class)
+    public ResponseEntity<String> fornecedorexistente(FornecedorExistenteException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }
