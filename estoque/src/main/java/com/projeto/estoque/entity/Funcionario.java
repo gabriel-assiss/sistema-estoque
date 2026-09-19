@@ -1,5 +1,7 @@
 package com.projeto.estoque.entity;
 
+import com.projeto.estoque.enums.StatusFornecedor;
+import com.projeto.estoque.enums.StatusFuncionario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,9 @@ public class Funcionario {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "status_funcionario")
+    private StatusFuncionario statusFuncionario;
+
     @Column(name = "email")
     private String email;
 
@@ -53,6 +58,14 @@ public class Funcionario {
         this.role = role;
         this.email = email;
         this.senha = senha;
+    }
+
+    public StatusFuncionario getStatusFuncionario() {
+        return statusFuncionario;
+    }
+
+    public void setStatusFuncionario(StatusFuncionario statusFuncionario) {
+        this.statusFuncionario = statusFuncionario;
     }
 
     public Long getId() {

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/estoque/estoque.iml" filepath="$PROJECT_DIR$/estoque/estoque.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/estoque.iml" filepath="$PROJECT_DIR$/.idea/estoque.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/sistema-estoque2.iml" filepath="$PROJECT_DIR$/.idea/sistema-estoque2.iml" />
     </modules>
   </component>

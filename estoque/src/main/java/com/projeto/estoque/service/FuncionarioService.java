@@ -1,6 +1,11 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.entity.Funcionario;
+import com.projeto.estoque.entity.Funcionario;
+import com.projeto.estoque.enums.StatusFuncionario;
+import com.projeto.estoque.exception.FuncionarioExistenteException;
+import com.projeto.estoque.exception.FuncionarioNaoEncontradoException;
+import com.projeto.estoque.repository.FuncionarioRepository;
 import com.projeto.estoque.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,27 +22,48 @@ public class FuncionarioService {
     }
 
     public Funcionario salvar(Funcionario funcionario) {
-        return funcionarioRepository.save(funcionario);
+        if(funcionarioRepository.existsByMatricula(funcionario.getMatricula())){
+            throw new FuncionarioExistenteException("Funcionario já existe");
+        }else{
+            return funcionarioRepository.save(funcionario);
+        }
     }
 
     public List<Funcionario> listarTodos() {
         return funcionarioRepository.findAll();
     }
 
-    public Optional<Funcionario> buscarPorId(Long id) {
-        return funcionarioRepository.findById(id);
+    public Funcionario buscarPorId(Long id) {
+
+        return funcionarioRepository.findById(id).orElseThrow(
+                ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
+        );
     }
 
-    public Funcionario atualizar(Funcionario funcionario) {
+    public Funcionario inativarFuncionario(Long idFuncionario){
+        Funcionario funcionario = funcionarioRepository.findById(idFuncionario).orElseThrow(
+                ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
+        );
+        funcionario.setStatusFuncionario(StatusFuncionario.INATIVO);
+
+        return funcionarioRepository.save(funcionario);
+
+    }
+
+    public Funcionario ativarFuncionario(Long idFuncionario){
+        Funcionario funcionario = funcionarioRepository.findById(idFuncionario).orElseThrow(
+                ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
+        );
+        funcionario.setStatusFuncionario(StatusFuncionario.ATIVO);
+
         return funcionarioRepository.save(funcionario);
     }
 
-    public Funcionario atualizar(Long id, Funcionario funcionario) {
-        funcionario.setId(id);
+    public Funcionario atualizaNome(Long id,String nome) {
+        Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(
+                ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
+        );
+        funcionario.setNome(nome);
         return funcionarioRepository.save(funcionario);
-    }
-
-    public void deletarPorId(Long id) {
-        funcionarioRepository.deleteById(id);
     }
 }
