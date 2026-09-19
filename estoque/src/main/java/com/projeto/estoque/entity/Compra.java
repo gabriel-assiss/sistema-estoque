@@ -44,7 +44,6 @@ public class Compra {
         this.funcionario = funcionario;
         this.fornecedor = fornecedor;
     }
-
     public LocalDate getDataCompra() {
         return dataCompra;
     }

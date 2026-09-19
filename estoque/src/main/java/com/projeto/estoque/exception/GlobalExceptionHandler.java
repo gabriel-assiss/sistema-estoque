@@ -37,5 +37,8 @@ public class GlobalExceptionHandler {
     }@ExceptionHandler(FornecedorExistenteException.class)
     public ResponseEntity<String> fornecedorexistente(FornecedorExistenteException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }@ExceptionHandler(FuncionarioExistenteException.class)
+    public ResponseEntity<String> funcionarioexistente(FuncionarioExistenteException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }
