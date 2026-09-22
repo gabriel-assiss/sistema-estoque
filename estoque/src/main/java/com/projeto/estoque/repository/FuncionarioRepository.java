@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> {
     boolean existsByMatricula(String matricula);
+    Funcionario findByNomeContainingIgnoreCase(String nome);
 }
