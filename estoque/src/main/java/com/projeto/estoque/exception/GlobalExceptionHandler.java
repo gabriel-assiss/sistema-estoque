@@ -1,5 +1,6 @@
 package com.projeto.estoque.exception;
 
+import com.projeto.estoque.entity.Produto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
