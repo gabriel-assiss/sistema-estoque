@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FornecedorRepository extends JpaRepository<Fornecedor, Long> {
     Boolean existsByCnpj(String cnpj);
+    Fornecedor findByNomeContainingIgnoreCase(String nome);
 }

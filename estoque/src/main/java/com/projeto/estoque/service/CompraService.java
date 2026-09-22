@@ -1,7 +1,6 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.compra.CompraRequestDTO;
-import com.projeto.estoque.dto.compra.CompraUpdateDTO;
 import com.projeto.estoque.dto.compra.ItemCompraRequestDTO;
 import com.projeto.estoque.entity.*;
 import com.projeto.estoque.enums.StatusCompra;
@@ -11,7 +10,6 @@ import com.projeto.estoque.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -81,15 +79,15 @@ public class CompraService {
 
 
     @Transactional
-    public Compra cancelar(CompraUpdateDTO compraUpdate, Long idCompra, Long  idFuncionario ) {
+    public Compra cancelar(Long idCompra, Long  idFuncionario ) {
         Compra compraExistente = compraRepository.findById(idCompra).orElseThrow(
                 ()-> new CompraNaoEncontradaException("Compra não encontrada")
         );
 
         StatusCompra statusAnterior = compraExistente.getStatusCompra();
-        StatusCompra novoStatus = compraUpdate.getStatusCompra();
+        StatusCompra novoStatus = StatusCompra.CANCELADA;
 
-        compraExistente.setStatusCompra(novoStatus);
+
         Funcionario funcionario=funcionarioRepository.findById(idFuncionario).orElseThrow(
                 () -> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
         );
@@ -121,6 +119,7 @@ public class CompraService {
         }else{
             throw new StatusInvalidoException("Status Inválido");
         }
+        compraExistente.setStatusCompra(novoStatus);
 
         return compraRepository.save(compraExistente);
 
