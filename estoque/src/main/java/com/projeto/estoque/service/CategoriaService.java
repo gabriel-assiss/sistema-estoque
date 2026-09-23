@@ -1,5 +1,6 @@
 package com.projeto.estoque.service;
 
+import com.projeto.estoque.dto.categoria.CategoriaDTO;
 import com.projeto.estoque.entity.Categoria;
 import com.projeto.estoque.enums.StatusCategoria;
 import com.projeto.estoque.exception.CategoriaNaoEncontradoException;
@@ -67,5 +68,17 @@ public class CategoriaService {
 
         categoriaRepository.delete(categoriaEncontrada);
 
+    }
+
+    public List<CategoriaDTO> buscarPorNome(String nome) {
+        List<Categoria> categorias = categoriaRepository.findAllByNomeContainingIgnoreCase(nome);
+        if (categorias.isEmpty()) {
+            throw new CategoriaNaoEncontradoException("Nenhuma categoria encontrada com o nome: " + nome);
+        }
+        return categorias.stream().map(CategoriaDTO::new).toList();
+    }
+
+    public List<CategoriaDTO> pesquisarPorNome(String nome) {
+        return buscarPorNome(nome);
     }
 }

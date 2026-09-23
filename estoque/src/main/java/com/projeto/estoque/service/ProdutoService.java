@@ -1,5 +1,6 @@
 package com.projeto.estoque.service;
 
+import com.projeto.estoque.dto.produto.ProdutoDTO;
 import com.projeto.estoque.entity.Produto;
 import com.projeto.estoque.enums.StatusProduto;
 import com.projeto.estoque.exception.ProdutoExistenteException;
@@ -64,5 +65,17 @@ public class ProdutoService {
 
     public void deletarPorId(Long id) {
         produtoRepository.deleteById(id);
+    }
+
+    public List<ProdutoDTO> buscarPorNome(String nome) {
+        List<Produto> produtos = produtoRepository.findAllByNomeContainingIgnoreCase(nome);
+        if (produtos.isEmpty()) {
+            throw new ProdutoNaoEncontradoExeption("Nenhum produto encontrado com o nome: " + nome);
+        }
+        return produtos.stream().map(ProdutoDTO::new).toList();
+    }
+
+    public List<ProdutoDTO> pesquisarPorNome(String nome) {
+        return buscarPorNome(nome);
     }
 }
