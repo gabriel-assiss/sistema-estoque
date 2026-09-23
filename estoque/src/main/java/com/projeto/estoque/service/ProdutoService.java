@@ -75,7 +75,5 @@ public class ProdutoService {
         return produtos.stream().map(ProdutoDTO::new).toList();
     }
 
-    public List<ProdutoDTO> pesquisarPorNome(String nome) {
-        return buscarPorNome(nome);
-    }
+
 }

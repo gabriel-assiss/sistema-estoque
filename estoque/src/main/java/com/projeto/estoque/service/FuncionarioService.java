@@ -74,7 +74,5 @@ public class FuncionarioService {
         return funcionarios.stream().map(FuncionarioDTO::new).toList();
     }
 
-    public List<FuncionarioDTO> pesquisarPorNome(String nome) {
-        return buscarPorNome(nome);
-    }
+
 }
