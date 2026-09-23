@@ -74,7 +74,5 @@ public class FornecedorService {
         return fornecedores.stream().map(FornecedorDTO::new).toList();
     }
 
-    public List<FornecedorDTO> pesquisarPorNome(String nome) {
-        return buscarPorNome(nome);
-    }
+
 }

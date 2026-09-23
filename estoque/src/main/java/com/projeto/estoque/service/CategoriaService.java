@@ -78,7 +78,5 @@ public class CategoriaService {
         return categorias.stream().map(CategoriaDTO::new).toList();
     }
 
-    public List<CategoriaDTO> pesquisarPorNome(String nome) {
-        return buscarPorNome(nome);
-    }
+
 }
