@@ -32,6 +32,7 @@ public class EstoqueService {
         return estoqueRepository.findById(id);
     }
 
+
     public void atualizarQuantidadeMais(Long idProduto, int quantidade) {
         Produto produto = produtoRepository.findById(idProduto).orElseThrow(
                 ()-> new ProdutoNaoEncontradoExeption("produto não encontrado")
