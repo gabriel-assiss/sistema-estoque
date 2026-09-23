@@ -1,11 +1,10 @@
 package com.projeto.estoque.service;
 
-import com.projeto.estoque.entity.Funcionario;
+import com.projeto.estoque.dto.funcionario.FuncionarioDTO;
 import com.projeto.estoque.entity.Funcionario;
 import com.projeto.estoque.enums.StatusFuncionario;
 import com.projeto.estoque.exception.FuncionarioExistenteException;
 import com.projeto.estoque.exception.FuncionarioNaoEncontradoException;
-import com.projeto.estoque.repository.FuncionarioRepository;
 import com.projeto.estoque.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -65,5 +64,17 @@ public class FuncionarioService {
         );
         funcionario.setNome(nome);
         return funcionarioRepository.save(funcionario);
+    }
+
+    public List<FuncionarioDTO> buscarPorNome(String nome) {
+        List<Funcionario> funcionarios = funcionarioRepository.findAllByNomeContainingIgnoreCase(nome);
+        if (funcionarios.isEmpty()) {
+            throw new FuncionarioNaoEncontradoException("Nenhum funcionário encontrado com o nome: " + nome);
+        }
+        return funcionarios.stream().map(FuncionarioDTO::new).toList();
+    }
+
+    public List<FuncionarioDTO> pesquisarPorNome(String nome) {
+        return buscarPorNome(nome);
     }
 }

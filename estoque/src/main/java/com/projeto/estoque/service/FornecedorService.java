@@ -1,5 +1,6 @@
 package com.projeto.estoque.service;
 
+import com.projeto.estoque.dto.fornecedor.FornecedorDTO;
 import com.projeto.estoque.entity.Fornecedor;
 import com.projeto.estoque.enums.StatusFornecedor;
 import com.projeto.estoque.exception.FornecedorExistenteException;
@@ -65,4 +66,15 @@ public class FornecedorService {
         return fornecedorRepository.save(fornecedor);
     }
 
+    public List<FornecedorDTO> buscarPorNome(String nome) {
+        List<Fornecedor> fornecedores = fornecedorRepository.findAllByNomeContainingIgnoreCase(nome);
+        if (fornecedores.isEmpty()) {
+            throw new FornecedorNaoEncontradoException("Nenhum fornecedor encontrado com o nome: " + nome);
+        }
+        return fornecedores.stream().map(FornecedorDTO::new).toList();
+    }
+
+    public List<FornecedorDTO> pesquisarPorNome(String nome) {
+        return buscarPorNome(nome);
+    }
 }
