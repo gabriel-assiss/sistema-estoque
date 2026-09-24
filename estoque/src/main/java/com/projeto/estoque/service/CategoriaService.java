@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.categoria.CategoriaDTO;
+import com.projeto.estoque.dto.categoria.CategoriaSaveRequetDTO;
 import com.projeto.estoque.entity.Categoria;
 import com.projeto.estoque.enums.StatusCategoria;
 import com.projeto.estoque.exception.CategoriaNaoEncontradoException;
@@ -21,8 +22,19 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public Categoria salvar(Categoria categoria) {
-        return categoriaRepository.save(categoria);
+    public Categoria transformarDTO(CategoriaSaveRequetDTO categoriaDto){
+        Categoria categoria = new Categoria();
+        categoria.setStatusCategoria(StatusCategoria.ATIVO);
+        categoria.setNome(categoriaDto.getNome());
+        return categoria;
+    }
+    public Categoria salvar(CategoriaSaveRequetDTO categoriaDTO) {
+        Categoria categoria = transformarDTO(categoriaDTO);
+        if (categoriaRepository.existsByNome(categoria.getNome())){
+            throw new CategoriaNaoEncontradoException("Categoria existente");
+        }else{
+            return categoria;
+        }
     }
 
     public List<Categoria> listarTodos() {

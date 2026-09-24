@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.fornecedor.FornecedorDTO;
+import com.projeto.estoque.dto.fornecedor.FornecedorSaveRequetDTO;
 import com.projeto.estoque.entity.Fornecedor;
 import com.projeto.estoque.enums.StatusFornecedor;
 import com.projeto.estoque.exception.FornecedorExistenteException;
@@ -20,7 +21,18 @@ public class FornecedorService {
         this.fornecedorRepository = fornecedorRepository;
     }
 
-    public Fornecedor salvar(Fornecedor fornecedor) {
+    public Fornecedor transformarDto(FornecedorSaveRequetDTO fornecedordto){
+        Fornecedor fornecedor = new Fornecedor();
+        fornecedor.setStatusFornecedor(StatusFornecedor.ATIVO);
+        fornecedor.setCnpj(fornecedordto.getCnpj());
+        fornecedor.setNome(fornecedordto.getNome());
+
+        return fornecedor;
+    }
+
+    public Fornecedor salvar(FornecedorSaveRequetDTO fornecedorDTO) {
+
+        Fornecedor fornecedor = transformarDto(fornecedorDTO);
         if(fornecedorRepository.existsByCnpj(fornecedor.getCnpj())){
             throw new FornecedorExistenteException("Fornecedor já existe");
         }else{

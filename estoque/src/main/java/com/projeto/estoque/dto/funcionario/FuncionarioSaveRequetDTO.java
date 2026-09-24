@@ -7,8 +7,27 @@ public class FuncionarioSaveRequetDTO {
     private RoleFuncionario role;
     private String email;
     private String senha;
+    private String cargo;
+    private String matricula;
+
 
     public FuncionarioSaveRequetDTO() {
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 
     public String getNome() {

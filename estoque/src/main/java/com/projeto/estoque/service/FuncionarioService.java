@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.funcionario.FuncionarioDTO;
+import com.projeto.estoque.dto.funcionario.FuncionarioSaveRequetDTO;
 import com.projeto.estoque.entity.Funcionario;
 import com.projeto.estoque.enums.StatusFuncionario;
 import com.projeto.estoque.exception.FuncionarioExistenteException;
@@ -20,7 +21,21 @@ public class FuncionarioService {
         this.funcionarioRepository = funcionarioRepository;
     }
 
-    public Funcionario salvar(Funcionario funcionario) {
+    public Funcionario transformarEmDTO(FuncionarioSaveRequetDTO funcionarioDTO){
+        Funcionario funcionario = new Funcionario();
+
+        funcionario.setStatusFuncionario(StatusFuncionario.ATIVO);
+        funcionario.setCargo(funcionarioDTO.getCargo());
+        funcionario.setEmail(funcionarioDTO.getEmail());
+        funcionario.setMatricula(funcionarioDTO.getMatricula());
+        funcionario.setSenha(funcionarioDTO.getSenha());
+
+        return funcionario;
+    }
+
+    public Funcionario salvar(FuncionarioSaveRequetDTO funcionarioDTO) {
+
+        Funcionario funcionario = transformarEmDTO(funcionarioDTO);
         if(funcionarioRepository.existsByMatricula(funcionario.getMatricula())){
             throw new FuncionarioExistenteException("Funcionario já existe");
         }else{
