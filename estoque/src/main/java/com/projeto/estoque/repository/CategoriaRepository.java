@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     List<Categoria> findAllByNomeContainingIgnoreCase(String nome);
     Optional<Categoria> findByNome(String nome);
+    Boolean existsByNome(String nome);
 }
