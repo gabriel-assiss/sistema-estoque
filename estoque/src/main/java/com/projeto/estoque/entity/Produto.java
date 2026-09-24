@@ -1,5 +1,6 @@
 package com.projeto.estoque.entity;
 
+import com.projeto.estoque.enums.RoleFuncionario;
 import com.projeto.estoque.enums.StatusProduto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +35,11 @@ public class Produto {
     @Enumerated(EnumType.STRING)
     @Column(name = "status_produto")
     private StatusProduto statusProduto;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_funcionario")
+    private RoleFuncionario role;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "fk_categoria_id", nullable = false)
