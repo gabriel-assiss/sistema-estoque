@@ -1,4 +1,4 @@
-﻿package com.projeto.estoque.dto.compra;
+package com.projeto.estoque.dto.compra;
 
 import com.projeto.estoque.entity.Compra;
 import com.projeto.estoque.enums.StatusCompra;
@@ -9,15 +9,15 @@ public class CompraResponseDTO {
     private Long id;
     private LocalDate dataCompra;
     private StatusCompra statusCompra;
-    
+
     public CompraResponseDTO() {}
-    
+
     public CompraResponseDTO(Compra compra) {
         this.id = compra.getId();
         this.dataCompra = compra.getDataCompra();
         this.statusCompra = compra.getStatusCompra();
     }
-    
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public LocalDate getDataCompra() { return dataCompra; }

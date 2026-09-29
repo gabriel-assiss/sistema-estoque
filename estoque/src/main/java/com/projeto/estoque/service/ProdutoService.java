@@ -48,12 +48,29 @@ public class ProdutoService {
         return new ProdutoResponseDTO(produto);
     }
 
+
+    public List<ProdutoResponseDTO> buscarPorCategoria(String categoriaNome){
+        List<Produto> produtos = produtoRepository.findAllByCategoriaNomeIgnoreCase(categoriaNome);
+
+        if (produtos.isEmpty()){
+            throw  new ProdutoNaoEncontradoExeption("Nenhum produto encrontrado para a categoria "+ categoriaNome);
+        }
+
+        return produtos
+                .stream()
+                .map(this::transformarEmResponseDTO)
+                .toList();
+    }
+
     @Transactional
     public ProdutoResponseDTO salvar(ProdutoSaveRequetDTO produtoDTO,int quantidade) {
 
         Produto produto = transformarDTOemProduto(produtoDTO);
         if (produtoRepository.existsByNome(produto.getNome())) {
             throw new ProdutoExistenteException("Produto já cadastrado");
+        }
+        if (!categoriaRepository.existsById(produtoDTO.getCategoriaId())){
+            throw new CategoriaNaoEncontradoException("Categoria não existe");
         }
         Produto produtoSalvo = produtoRepository.save(produto);
 
