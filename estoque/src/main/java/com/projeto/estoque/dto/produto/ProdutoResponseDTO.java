@@ -9,8 +9,8 @@ public class ProdutoResponseDTO extends ProdutoDTO {
         super();
     }
 
-    public ProdutoResponseDTO(Long id, String nome, String unidadeMedida, StatusProduto statusProduto, Long categoriaId, String categoriaNome) {
-        super(id, nome, unidadeMedida, statusProduto, categoriaId, categoriaNome);
+    public ProdutoResponseDTO(Long id, String nome, String unidadeMedida, StatusProduto statusProduto, Long categoriaId, String categoriaNome,int estoqueQuantidade) {
+        super(id, nome, unidadeMedida, statusProduto, categoriaId,categoriaNome,estoqueQuantidade);
     }
 
     public ProdutoResponseDTO(Produto produto) {

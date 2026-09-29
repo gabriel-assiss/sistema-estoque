@@ -11,17 +11,19 @@ public class ProdutoDTO {
     private StatusProduto statusProduto;
     private Long categoriaId;
     private String categoriaNome;
+    private int estoqueQuantidade;
 
     public ProdutoDTO() {
     }
 
-    public ProdutoDTO(Long id, String nome, String unidadeMedida, StatusProduto statusProduto, Long categoriaId, String categoriaNome) {
+    public ProdutoDTO(Long id, String nome, String unidadeMedida, StatusProduto statusProduto, Long categoriaId, String categoriaNome,int estoqueQuantidade) {
         this.id = id;
         this.nome = nome;
         this.unidadeMedida = unidadeMedida;
         this.statusProduto = statusProduto;
         this.categoriaId = categoriaId;
         this.categoriaNome = categoriaNome;
+        this.estoqueQuantidade = estoqueQuantidade;
     }
 
     public ProdutoDTO(Produto produto) {
@@ -30,6 +32,7 @@ public class ProdutoDTO {
             this.nome = produto.getNome();
             this.unidadeMedida = produto.getUnidadeMedida();
             this.statusProduto = produto.getStatusProduto();
+            this.estoqueQuantidade = produto.getEstoque().getQuantidadeEstoque();
             if (produto.getCategoria() != null) {
                 this.categoriaId = produto.getCategoria().getId();
                 this.categoriaNome = produto.getCategoria().getNome();
