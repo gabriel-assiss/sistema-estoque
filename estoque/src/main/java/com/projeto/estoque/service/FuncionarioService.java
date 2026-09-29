@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.funcionario.FuncionarioDTO;
+import com.projeto.estoque.dto.funcionario.FuncionarioResponseDTO;
 import com.projeto.estoque.dto.funcionario.FuncionarioSaveRequetDTO;
 import com.projeto.estoque.entity.Funcionario;
 import com.projeto.estoque.enums.StatusFuncionario;
@@ -33,52 +34,56 @@ public class FuncionarioService {
         return funcionario;
     }
 
-    public Funcionario salvar(FuncionarioSaveRequetDTO funcionarioDTO) {
+    public FuncionarioResponseDTO transformarEmResponseDTO(Funcionario funcionario) {
+        return new FuncionarioResponseDTO(funcionario);
+    }
+
+    public FuncionarioResponseDTO salvar(FuncionarioSaveRequetDTO funcionarioDTO) {
 
         Funcionario funcionario = transformarEmDTO(funcionarioDTO);
         if(funcionarioRepository.existsByMatricula(funcionario.getMatricula())){
             throw new FuncionarioExistenteException("Funcionario já existe");
         }else{
-            return funcionarioRepository.save(funcionario);
+            return transformarEmResponseDTO(funcionarioRepository.save(funcionario));
         }
     }
 
-    public List<Funcionario> listarTodos() {
-        return funcionarioRepository.findAll();
+    public List<FuncionarioResponseDTO> listarTodos() {
+        return funcionarioRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public Funcionario buscarPorId(Long id) {
+    public FuncionarioResponseDTO buscarPorId(Long id) {
 
-        return funcionarioRepository.findById(id).orElseThrow(
+        return transformarEmResponseDTO(funcionarioRepository.findById(id).orElseThrow(
                 ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
-        );
+        ));
     }
 
-    public Funcionario inativarFuncionario(Long idFuncionario){
+    public FuncionarioResponseDTO inativarFuncionario(Long idFuncionario){
         Funcionario funcionario = funcionarioRepository.findById(idFuncionario).orElseThrow(
                 ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
         );
         funcionario.setStatusFuncionario(StatusFuncionario.INATIVO);
 
-        return funcionarioRepository.save(funcionario);
+        return transformarEmResponseDTO(funcionarioRepository.save(funcionario));
 
     }
 
-    public Funcionario ativarFuncionario(Long idFuncionario){
+    public FuncionarioResponseDTO ativarFuncionario(Long idFuncionario){
         Funcionario funcionario = funcionarioRepository.findById(idFuncionario).orElseThrow(
                 ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
         );
         funcionario.setStatusFuncionario(StatusFuncionario.ATIVO);
 
-        return funcionarioRepository.save(funcionario);
+        return transformarEmResponseDTO(funcionarioRepository.save(funcionario));
     }
 
-    public Funcionario atualizaNome(Long id,String nome) {
+    public FuncionarioResponseDTO atualizaNome(Long id,String nome) {
         Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(
                 ()-> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
         );
         funcionario.setNome(nome);
-        return funcionarioRepository.save(funcionario);
+        return transformarEmResponseDTO(funcionarioRepository.save(funcionario));
     }
 
     public List<FuncionarioDTO> buscarPorNome(String nome) {

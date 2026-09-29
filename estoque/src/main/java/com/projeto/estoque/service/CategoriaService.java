@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.categoria.CategoriaDTO;
+import com.projeto.estoque.dto.categoria.CategoriaResponseDTO;
 import com.projeto.estoque.dto.categoria.CategoriaSaveRequetDTO;
 import com.projeto.estoque.entity.Categoria;
 import com.projeto.estoque.enums.StatusCategoria;
@@ -28,50 +29,62 @@ public class CategoriaService {
         categoria.setNome(categoriaDto.getNome());
         return categoria;
     }
-    public Categoria salvar(CategoriaSaveRequetDTO categoriaDTO) {
+
+    public CategoriaResponseDTO transformarEmResponseDTO(Categoria categoria) {
+        return new CategoriaResponseDTO(categoria);
+    }
+
+    public CategoriaResponseDTO salvar(CategoriaSaveRequetDTO categoriaDTO) {
         Categoria categoria = transformarDTO(categoriaDTO);
         if (categoriaRepository.existsByNome(categoria.getNome())){
             throw new CategoriaNaoEncontradoException("Categoria existente");
         }else{
-            return categoria;
+            Categoria salvo = categoriaRepository.save(categoria);
+            return transformarEmResponseDTO(salvo);
         }
     }
 
-    public List<Categoria> listarTodos() {
-        return categoriaRepository.findAll();
+    public List<CategoriaResponseDTO> listarTodos() {
+        return categoriaRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public List<Categoria> buscarCategoriasAtivas(Long id) {
-     List<Categoria> categorias = categoriaRepository.findAll();
-     List<Categoria> ativos = new ArrayList<>();
-    for (Categoria categoria : categorias) {
-        if (categoria.getStatusCategoria() == StatusCategoria.ATIVO){
-            ativos.add(categoria);
-        }
-    }
-    return ativos;
-    }
-    public List<Categoria> buscarCategoriasInativas(Long id) {
+    public List<CategoriaResponseDTO> buscarCategoriasAtivas(Long id) {
         List<Categoria> categorias = categoriaRepository.findAll();
-        List<Categoria> inativos = new ArrayList<>();
+        List<CategoriaResponseDTO> ativos = new ArrayList<>();
+        for (Categoria categoria : categorias) {
+            if (categoria.getStatusCategoria() == StatusCategoria.ATIVO){
+                ativos.add(transformarEmResponseDTO(categoria));
+            }
+        }
+        return ativos;
+    }
+    public List<CategoriaResponseDTO> buscarCategoriasInativas(Long id) {
+        List<Categoria> categorias = categoriaRepository.findAll();
+        List<CategoriaResponseDTO> inativos = new ArrayList<>();
         for (Categoria categoria : categorias) {
             if (categoria.getStatusCategoria() == StatusCategoria.INATIVO){
-                inativos.add(categoria);
+                inativos.add(transformarEmResponseDTO(categoria));
             }
         }
         return inativos;
     }
 
-    public Optional<Categoria> buscarPorId(Long id) {
-        return categoriaRepository.findById(id);
+    public CategoriaResponseDTO buscarPorId(Long id) {
+        Categoria categoria = categoriaRepository.findById(id).orElseThrow(
+                ()-> new CategoriaNaoEncontradoException("Categoria não encontrada")
+        );
+        return transformarEmResponseDTO(categoria);
     }
 
 
-    public Categoria atualizar(Long id, @NonNull Categoria categoria) {
+    public CategoriaResponseDTO atualizar(Long id, @NonNull Categoria categoria) {
        Categoria categoriaEncontrada = categoriaRepository.findById(id).orElseThrow(
                ()-> new CategoriaNaoEncontradoException("Impossivel atualizar o categoria, categoriia não encontrada")
        );
-       return categoriaRepository.save(categoriaEncontrada);
+       categoriaEncontrada.setNome(categoria.getNome());
+       categoriaEncontrada.setStatusCategoria(categoria.getStatusCategoria());
+       Categoria salvo = categoriaRepository.save(categoriaEncontrada);
+       return transformarEmResponseDTO(salvo);
     }
 
     public void deletarPorId(Long id) {

@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.compra.CompraRequestDTO;
+import com.projeto.estoque.dto.compra.CompraResponseDTO;
 import com.projeto.estoque.dto.compra.ItemCompraRequestDTO;
 import com.projeto.estoque.entity.*;
 import com.projeto.estoque.enums.StatusCompra;
@@ -37,8 +38,12 @@ public class CompraService {
         this.itemCompraRepository = itemCompraRepository;
     }
 
+    public CompraResponseDTO transformarEmResponseDTO(Compra compra) {
+        return new CompraResponseDTO(compra);
+    }
+
     @Transactional
-    public Compra salvar(CompraRequestDTO compraDTO) {
+    public CompraResponseDTO salvar(CompraRequestDTO compraDTO) {
         Compra compra = new Compra();
         compra.setDataCompra(LocalDate.now());
 
@@ -74,12 +79,12 @@ public class CompraService {
         }
         compra.setStatusCompra(StatusCompra.CONCLUIDA);
 
-        return compraRepository.save(compra);
+        return transformarEmResponseDTO(compraRepository.save(compra));
     }
 
 
     @Transactional
-    public Compra cancelar(Long idCompra, Long  idFuncionario ) {
+    public CompraResponseDTO cancelar(Long idCompra, Long  idFuncionario ) {
         Compra compraExistente = compraRepository.findById(idCompra).orElseThrow(
                 ()-> new CompraNaoEncontradaException("Compra não encontrada")
         );
@@ -121,31 +126,35 @@ public class CompraService {
         }
         compraExistente.setStatusCompra(novoStatus);
 
-        return compraRepository.save(compraExistente);
+        return transformarEmResponseDTO(compraRepository.save(compraExistente));
 
     }
 
-    public List<Compra> listarTodos() {
-        return compraRepository.findAll();
+    public List<CompraResponseDTO> listarTodos() {
+        return compraRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public Optional<Compra> buscarPorId(Long id) {
-        return compraRepository.findById(id);
+    public CompraResponseDTO buscarPorId(Long id) {
+        return transformarEmResponseDTO(compraRepository.findById(id).orElseThrow(
+                () -> new CompraNaoEncontradaException("Compra não encontrada")
+        ));
     }
-    public Optional<List<Compra>> buscarPorFuncionario(Long id) {
+    public List<CompraResponseDTO> buscarPorFuncionario(Long id) {
         Funcionario funcionario  = funcionarioRepository.findById(id).orElseThrow(
                 ()-> new FuncionarioNaoEncontradoException("Funcionario nao encontrado")
         );
 
 
-        return compraRepository.findByFuncionario(funcionario);
+        return compraRepository.findByFuncionario(funcionario).orElse(List.of())
+                .stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public  Optional<List<Compra>> buscarPorFornecedor(Long id) {
+    public List<CompraResponseDTO> buscarPorFornecedor(Long id) {
         Fornecedor fornecedor =  fornecedorRepository.findById(id).orElseThrow(
                 ()-> new FornecedorNaoEncontradoException("Fornecedor nao encontrado")
         );
-        return compraRepository.findByFornecedor(fornecedor);
+        return compraRepository.findByFornecedor(fornecedor).orElse(List.of())
+                .stream().map(this::transformarEmResponseDTO).toList();
     }
 
 

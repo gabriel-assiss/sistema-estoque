@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.fornecedor.FornecedorDTO;
+import com.projeto.estoque.dto.fornecedor.FornecedorResponseDTO;
 import com.projeto.estoque.dto.fornecedor.FornecedorSaveRequetDTO;
 import com.projeto.estoque.entity.Fornecedor;
 import com.projeto.estoque.enums.StatusFornecedor;
@@ -30,52 +31,56 @@ public class FornecedorService {
         return fornecedor;
     }
 
-    public Fornecedor salvar(FornecedorSaveRequetDTO fornecedorDTO) {
+    public FornecedorResponseDTO transformarEmResponseDTO(Fornecedor fornecedor) {
+        return new FornecedorResponseDTO(fornecedor);
+    }
+
+    public FornecedorResponseDTO salvar(FornecedorSaveRequetDTO fornecedorDTO) {
 
         Fornecedor fornecedor = transformarDto(fornecedorDTO);
         if(fornecedorRepository.existsByCnpj(fornecedor.getCnpj())){
             throw new FornecedorExistenteException("Fornecedor já existe");
         }else{
-            return fornecedorRepository.save(fornecedor);
+            return transformarEmResponseDTO(fornecedorRepository.save(fornecedor));
         }
     }
 
-    public List<Fornecedor> listarTodos() {
-        return fornecedorRepository.findAll();
+    public List<FornecedorResponseDTO> listarTodos() {
+        return fornecedorRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public Fornecedor buscarPorId(Long id) {
+    public FornecedorResponseDTO buscarPorId(Long id) {
 
-        return fornecedorRepository.findById(id).orElseThrow(
+        return transformarEmResponseDTO(fornecedorRepository.findById(id).orElseThrow(
                 ()-> new FornecedorNaoEncontradoException("Fornecedor não encontrado")
-        );
+        ));
     }
 
-    public Fornecedor inativarFornecedor(Long idFornecedor){
+    public FornecedorResponseDTO inativarFornecedor(Long idFornecedor){
         Fornecedor fornecedor = fornecedorRepository.findById(idFornecedor).orElseThrow(
                 ()-> new FornecedorNaoEncontradoException("Fornecedor não encontrado")
         );
         fornecedor.setStatusFornecedor(StatusFornecedor.INATIVO);
 
-        return fornecedorRepository.save(fornecedor);
+        return transformarEmResponseDTO(fornecedorRepository.save(fornecedor));
 
     }
 
-    public Fornecedor ativarFornecedor(Long idFornecedor){
+    public FornecedorResponseDTO ativarFornecedor(Long idFornecedor){
         Fornecedor fornecedor = fornecedorRepository.findById(idFornecedor).orElseThrow(
                 ()-> new FornecedorNaoEncontradoException("Fornecedor não encontrado")
         );
         fornecedor.setStatusFornecedor(StatusFornecedor.ATIVO);
 
-        return fornecedorRepository.save(fornecedor);
+        return transformarEmResponseDTO(fornecedorRepository.save(fornecedor));
     }
 
-    public Fornecedor atualizaNome(Long id,String nome) {
+    public FornecedorResponseDTO atualizaNome(Long id,String nome) {
         Fornecedor fornecedor = fornecedorRepository.findById(id).orElseThrow(
                 ()-> new FornecedorNaoEncontradoException("Fornecedor não encontrado")
                 );
         fornecedor.setNome(nome);
-        return fornecedorRepository.save(fornecedor);
+        return transformarEmResponseDTO(fornecedorRepository.save(fornecedor));
     }
 
     public List<FornecedorDTO> buscarPorNome(String nome) {

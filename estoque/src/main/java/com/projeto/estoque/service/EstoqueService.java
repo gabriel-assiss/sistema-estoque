@@ -1,5 +1,6 @@
 package com.projeto.estoque.service;
 
+import com.projeto.estoque.dto.estoque.EstoqueResponseDTO;
 import com.projeto.estoque.entity.Estoque;
 import com.projeto.estoque.entity.Produto;
 import com.projeto.estoque.exception.EstoqueInsuficienteException;
@@ -23,13 +24,16 @@ public class EstoqueService {
         this.produtoRepository = produtoRepository;
     }
 
-
-    public List<Estoque> listarTodos() {
-        return estoqueRepository.findAll();
+    public EstoqueResponseDTO transformarEmResponseDTO(Estoque estoque) {
+        return new EstoqueResponseDTO(estoque);
     }
 
-    public Optional<Estoque> buscarPorId(Long id) {
-        return estoqueRepository.findById(id);
+    public List<EstoqueResponseDTO> listarTodos() {
+        return estoqueRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    }
+
+    public EstoqueResponseDTO buscarPorId(Long id) {
+        return transformarEmResponseDTO(estoqueRepository.findById(id).orElseThrow(() -> new RuntimeException("Estoque não encontrado")));
     }
 
 

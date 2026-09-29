@@ -1,6 +1,7 @@
 package com.projeto.estoque.service;
 
 import com.projeto.estoque.dto.produto.ProdutoDTO;
+import com.projeto.estoque.dto.produto.ProdutoResponseDTO;
 import com.projeto.estoque.dto.produto.ProdutoSaveRequetDTO;
 import com.projeto.estoque.entity.Estoque;
 import com.projeto.estoque.entity.Produto;
@@ -42,8 +43,13 @@ public class ProdutoService {
 
         return produto;
     }
+
+    public ProdutoResponseDTO transformarEmResponseDTO(Produto produto) {
+        return new ProdutoResponseDTO(produto);
+    }
+
     @Transactional
-    public Produto salvar(ProdutoSaveRequetDTO produtoDTO,int quantidade) {
+    public ProdutoResponseDTO salvar(ProdutoSaveRequetDTO produtoDTO,int quantidade) {
 
         Produto produto = transformarDTOemProduto(produtoDTO);
         if (produtoRepository.existsByNome(produto.getNome())) {
@@ -57,19 +63,22 @@ public class ProdutoService {
         produtoSalvo.setEstoque(estoque);
         estoqueRepository.save(estoque);
 
-        return produtoSalvo;
+        return transformarEmResponseDTO(produtoSalvo);
 
     }
 
-    public List<Produto> listarTodos() {
-        return produtoRepository.findAll();
+    public List<ProdutoResponseDTO> listarTodos() {
+        return produtoRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public Optional<Produto> buscarPorId(Long id) {
-        return produtoRepository.findById(id);
+    public ProdutoResponseDTO buscarPorId(Long id) {
+        Produto produto = produtoRepository.findById(id).orElseThrow(
+                () -> new ProdutoNaoEncontradoExeption("Produto não encontrado")
+        );
+        return transformarEmResponseDTO(produto);
     }
 
-    public Produto atualizarParaInativo(Long id) {
+    public ProdutoResponseDTO atualizarParaInativo(Long id) {
 
         Produto produto = produtoRepository.findById(id).orElseThrow(()-> new ProdutoNaoEncontradoExeption("Produto não encontrado"));
 
@@ -78,9 +87,10 @@ public class ProdutoService {
         }
 
         produto.setStatusProduto(StatusProduto.INATIVO);
-        return produtoRepository.save(produto);
+        Produto salvo = produtoRepository.save(produto);
+        return transformarEmResponseDTO(salvo);
     }
-    public Produto atualizarParaAtivo(Long id) {
+    public ProdutoResponseDTO atualizarParaAtivo(Long id) {
 
         Produto produto = produtoRepository.findById(id).orElseThrow(()-> new ProdutoNaoEncontradoExeption("Produto não encontrado"));
 
@@ -90,7 +100,8 @@ public class ProdutoService {
 
         produto.setStatusProduto(StatusProduto.ATIVO);
 
-        return produtoRepository.save(produto);
+        Produto salvo = produtoRepository.save(produto);
+        return transformarEmResponseDTO(salvo);
     }
 
 
