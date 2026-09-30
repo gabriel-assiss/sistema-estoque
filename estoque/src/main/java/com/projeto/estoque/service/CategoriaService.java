@@ -48,7 +48,7 @@ public class CategoriaService {
         return categoriaRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
     }
 
-    public List<CategoriaResponseDTO> buscarCategoriasAtivas(Long id) {
+    public List<CategoriaResponseDTO> buscarCategoriasAtivas() {
         List<Categoria> categorias = categoriaRepository.findAll();
         List<CategoriaResponseDTO> ativos = new ArrayList<>();
         for (Categoria categoria : categorias) {
@@ -58,7 +58,7 @@ public class CategoriaService {
         }
         return ativos;
     }
-    public List<CategoriaResponseDTO> buscarCategoriasInativas(Long id) {
+    public List<CategoriaResponseDTO> buscarCategoriasInativas() {
         List<Categoria> categorias = categoriaRepository.findAll();
         List<CategoriaResponseDTO> inativos = new ArrayList<>();
         for (Categoria categoria : categorias) {
