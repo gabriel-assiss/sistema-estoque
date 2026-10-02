@@ -1,20 +1,22 @@
 package com.projeto.estoque.entity;
 
+import com.projeto.estoque.enums.RoleFuncionario;
 import com.projeto.estoque.enums.StatusFornecedor;
 import com.projeto.estoque.enums.StatusFuncionario;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.management.relation.Role;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "funcionario")
-public class Funcionario {
+public class Funcionario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +31,9 @@ public class Funcionario {
     @Column(name = "cargo")
     private String cargo;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
+    private RoleFuncionario roleFuncionario;
 
     @Column(name = "status_funcionario")
     private StatusFuncionario statusFuncionario;
@@ -50,12 +53,12 @@ public class Funcionario {
     public Funcionario() {
     }
 
-    public Funcionario(Long id, String nome, String matricula, String cargo, String role, String email, String senha) {
+    public Funcionario(Long id, String nome, String matricula, String cargo, RoleFuncionario roleFuncionario, String email, String senha) {
         this.id = id;
         this.nome = nome;
         this.matricula = matricula;
         this.cargo = cargo;
-        this.role = role;
+        this.roleFuncionario = roleFuncionario;
         this.email = email;
         this.senha = senha;
     }
@@ -100,12 +103,12 @@ public class Funcionario {
         this.cargo = cargo;
     }
 
-    public String getRole() {
-        return role;
+    public RoleFuncionario getRoleFuncionario() {
+        return roleFuncionario;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleFuncionario(RoleFuncionario roleFuncionario) {
+        this.roleFuncionario = roleFuncionario;
     }
 
     public String getEmail() {
@@ -139,4 +142,43 @@ public class Funcionario {
     public void setCompras(List<Compra> compras) {
         this.compras = compras;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        return List.of(new SimpleGrantedAuthority("ROLE_"+roleFuncionario.name()));
+
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
 }
