@@ -39,13 +39,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
 
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/funcionarios/**").hasRole("ADMIN")
+                        .requestMatchers("/funcionarios/buscanome/**").hasRole("PADRAO")
+                        .requestMatchers("/funcionarios/atualizanome/**").hasRole("PADRAO")
+                        .requestMatchers("/funcionarios/buscaid/**").hasRole("PADRAO")
+                        .requestMatchers("/funcionarios/todos/**").hasRole("PADRAO")
+                        .requestMatchers("/compras/**").hasAnyRole("ADMIN","PADRAO")
+                        .requestMatchers("/categorias/**").hasAnyRole("ADMIN","PADRAO")
+                        .requestMatchers("/movimentacoes/**").hasAnyRole("ADMIN","PADRAO")
+                        .requestMatchers("/estoques/**").hasAnyRole("ADMIN","PADRAO")
+                        .requestMatchers("/fornecedores/**").hasAnyRole("ADMIN","PADRAO")
+                        .requestMatchers("/produtos/**").hasAnyRole("ADMIN","PADRAO")
 
-                        .requestMatchers("/tecnicos/**").hasRole("")
 
-                        .requestMatchers("/funcionarios/**").hasRole("FUNCIONARIO")
 
-                        .requestMatchers("/chamados/**").hasAnyRole("FUNCIONARIO", "TECNICO")
 
 
 

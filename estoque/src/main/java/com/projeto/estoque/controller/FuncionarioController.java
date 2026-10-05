@@ -20,37 +20,37 @@ public class FuncionarioController {
         this.funcionarioService = funcionarioService;
     }
 
-    @PostMapping
+    @PostMapping("/salvar")
     public ResponseEntity<FuncionarioResponseDTO> salvar(@RequestBody FuncionarioSaveRequetDTO funcionarioDTO) {
         return new ResponseEntity<>(funcionarioService.salvar(funcionarioDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/todos")
     public ResponseEntity<List<FuncionarioResponseDTO>> listarTodos() {
         return ResponseEntity.ok(funcionarioService.listarTodos());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscaid/{id}")
     public ResponseEntity<FuncionarioResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(funcionarioService.buscarPorId(id));
     }
 
-    @PutMapping("/{id}/inativar")
+    @PutMapping("/inativar/{id}")
     public ResponseEntity<FuncionarioResponseDTO> inativarFuncionario(@PathVariable Long id) {
         return ResponseEntity.ok(funcionarioService.inativarFuncionario(id));
     }
 
-    @PutMapping("/{id}/ativar")
+    @PutMapping("/ativar/{id}")
     public ResponseEntity<FuncionarioResponseDTO> ativarFuncionario(@PathVariable Long id) {
         return ResponseEntity.ok(funcionarioService.ativarFuncionario(id));
     }
 
-    @PutMapping("/{id}/nome")
+    @PutMapping("/atualizanome/{id}")
     public ResponseEntity<FuncionarioResponseDTO> atualizaNome(@PathVariable Long id, @RequestParam String nome) {
         return ResponseEntity.ok(funcionarioService.atualizaNome(id, nome));
     }
 
-    @GetMapping("/nome/{nome}")
+    @GetMapping("/buscanome/{nome}")
     public ResponseEntity<List<FuncionarioDTO>> buscarPorNome(@PathVariable String nome) {
         return ResponseEntity.ok(funcionarioService.buscarPorNome(nome));
     }

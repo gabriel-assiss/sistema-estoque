@@ -35,7 +35,7 @@ public class AuthService {
         funcionarioLoginResponseDTO.setToken(token);
         funcionarioLoginResponseDTO.setEmail(funcionario.getEmail());
         funcionarioLoginResponseDTO.setNome(funcionario.getNome());
-        funcionarioLoginResponseDTO.setRole(funcionario.getRole().getRoleName());
+        funcionarioLoginResponseDTO.setRole(funcionario.getRoleFuncionario().name());
         funcionarioLoginResponseDTO.setId(funcionario.getId());
 
 

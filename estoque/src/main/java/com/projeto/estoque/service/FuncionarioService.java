@@ -8,6 +8,7 @@ import com.projeto.estoque.enums.StatusFuncionario;
 import com.projeto.estoque.exception.FuncionarioExistenteException;
 import com.projeto.estoque.exception.FuncionarioNaoEncontradoException;
 import com.projeto.estoque.repository.FuncionarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +18,11 @@ import java.util.Optional;
 public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
+    public FuncionarioService(FuncionarioRepository funcionarioRepository,PasswordEncoder passwordEncoder) {
         this.funcionarioRepository = funcionarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Funcionario transformarEmDTO(FuncionarioSaveRequetDTO funcionarioDTO){
@@ -29,7 +32,7 @@ public class FuncionarioService {
         funcionario.setCargo(funcionarioDTO.getCargo());
         funcionario.setEmail(funcionarioDTO.getEmail());
         funcionario.setMatricula(funcionarioDTO.getMatricula());
-        funcionario.setSenha(funcionarioDTO.getSenha());
+        funcionario.setSenha(passwordEncoder.encode(funcionarioDTO.getSenha()));
 
         return funcionario;
     }
