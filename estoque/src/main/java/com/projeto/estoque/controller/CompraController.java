@@ -3,6 +3,9 @@ package com.projeto.estoque.controller;
 import com.projeto.estoque.dto.compra.CompraRequestDTO;
 import com.projeto.estoque.dto.compra.CompraResponseDTO;
 import com.projeto.estoque.service.CompraService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,7 @@ public class CompraController {
     }
 
     @PostMapping
-    public ResponseEntity<CompraResponseDTO> salvar(@RequestBody CompraRequestDTO compraDTO) {
+    public ResponseEntity<CompraResponseDTO> salvar(@Valid @RequestBody CompraRequestDTO compraDTO) {
         return new ResponseEntity<>(compraService.salvar(compraDTO), HttpStatus.CREATED);
     }
 
@@ -30,8 +33,8 @@ public class CompraController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CompraResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(compraService.listarTodos());
+    public ResponseEntity<Page<CompraResponseDTO>> listarTodos(Pageable pageable) {
+        return ResponseEntity.ok(compraService.listarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -40,12 +43,12 @@ public class CompraController {
     }
 
     @GetMapping("/funcionario/{id}")
-    public ResponseEntity<List<CompraResponseDTO>> buscarPorFuncionario(@PathVariable Long id) {
-        return ResponseEntity.ok(compraService.buscarPorFuncionario(id));
+    public ResponseEntity<Page<CompraResponseDTO>> buscarPorFuncionario(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok(compraService.buscarPorFuncionario(id, pageable));
     }
 
     @GetMapping("/fornecedor/{id}")
-    public ResponseEntity<List<CompraResponseDTO>> buscarPorFornecedor(@PathVariable Long id) {
-        return ResponseEntity.ok(compraService.buscarPorFornecedor(id));
+    public ResponseEntity<Page<CompraResponseDTO>> buscarPorFornecedor(@PathVariable Long id, Pageable pageable) {
+        return ResponseEntity.ok(compraService.buscarPorFornecedor(id, pageable));
     }
 }

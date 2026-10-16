@@ -4,6 +4,9 @@ import com.projeto.estoque.dto.fornecedor.FornecedorDTO;
 import com.projeto.estoque.dto.fornecedor.FornecedorResponseDTO;
 import com.projeto.estoque.dto.fornecedor.FornecedorSaveRequetDTO;
 import com.projeto.estoque.service.FornecedorService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +24,13 @@ public class FornecedorController {
     }
 
     @PostMapping
-    public ResponseEntity<FornecedorResponseDTO> salvar(@RequestBody FornecedorSaveRequetDTO fornecedorDTO) {
+    public ResponseEntity<FornecedorResponseDTO> salvar(@Valid @RequestBody FornecedorSaveRequetDTO fornecedorDTO) {
         return new ResponseEntity<>(fornecedorService.salvar(fornecedorDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<FornecedorResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(fornecedorService.listarTodos());
+    public ResponseEntity<Page<FornecedorResponseDTO>> listarTodos(Pageable pageable) {
+        return ResponseEntity.ok(fornecedorService.listarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -51,7 +54,7 @@ public class FornecedorController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<FornecedorDTO>> buscarPorNome(@PathVariable String nome) {
-        return ResponseEntity.ok(fornecedorService.buscarPorNome(nome));
+    public ResponseEntity<Page<FornecedorDTO>> buscarPorNome(@PathVariable String nome, Pageable pageable) {
+        return ResponseEntity.ok(fornecedorService.buscarPorNome(nome, pageable));
     }
 }

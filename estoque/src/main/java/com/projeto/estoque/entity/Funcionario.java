@@ -63,6 +63,16 @@ public class Funcionario implements UserDetails {
         this.senha = senha;
     }
 
+    public Funcionario(Long id, String nome, String matricula, String cargo, String role, String email, String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.matricula = matricula;
+        this.cargo = cargo;
+        this.roleFuncionario = role != null ? RoleFuncionario.valueOf(role) : null;
+        this.email = email;
+        this.senha = senha;
+    }
+
     public StatusFuncionario getStatusFuncionario() {
         return statusFuncionario;
     }
@@ -109,6 +119,10 @@ public class Funcionario implements UserDetails {
 
     public void setRoleFuncionario(RoleFuncionario roleFuncionario) {
         this.roleFuncionario = roleFuncionario;
+    }
+
+    public String getRole() {
+        return roleFuncionario != null ? roleFuncionario.name() : null;
     }
 
     public String getEmail() {

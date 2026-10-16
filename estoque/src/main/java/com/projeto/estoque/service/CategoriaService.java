@@ -8,6 +8,8 @@ import com.projeto.estoque.enums.StatusCategoria;
 import com.projeto.estoque.exception.CategoriaNaoEncontradoException;
 import com.projeto.estoque.repository.CategoriaRepository;
 import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,29 +46,16 @@ public class CategoriaService {
         }
     }
 
-    public List<CategoriaResponseDTO> listarTodos() {
-        return categoriaRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    public Page<CategoriaResponseDTO> listarTodos(Pageable pageable) {
+        return categoriaRepository.findAll(pageable).map(this::transformarEmResponseDTO);
     }
 
-    public List<CategoriaResponseDTO> buscarCategoriasAtivas() {
-        List<Categoria> categorias = categoriaRepository.findAll();
-        List<CategoriaResponseDTO> ativos = new ArrayList<>();
-        for (Categoria categoria : categorias) {
-            if (categoria.getStatusCategoria() == StatusCategoria.ATIVO){
-                ativos.add(transformarEmResponseDTO(categoria));
-            }
-        }
-        return ativos;
+    public Page<CategoriaResponseDTO> buscarCategoriasAtivas(Pageable pageable) {
+        return categoriaRepository.findAllByStatusCategoria(pageable, StatusCategoria.ATIVO).map(this::transformarEmResponseDTO);
     }
-    public List<CategoriaResponseDTO> buscarCategoriasInativas() {
-        List<Categoria> categorias = categoriaRepository.findAll();
-        List<CategoriaResponseDTO> inativos = new ArrayList<>();
-        for (Categoria categoria : categorias) {
-            if (categoria.getStatusCategoria() == StatusCategoria.INATIVO){
-                inativos.add(transformarEmResponseDTO(categoria));
-            }
-        }
-        return inativos;
+
+    public Page<CategoriaResponseDTO> buscarCategoriasInativas(Pageable pageable) {
+        return categoriaRepository.findAllByStatusCategoria(pageable, StatusCategoria.INATIVO).map(this::transformarEmResponseDTO);
     }
 
     public CategoriaResponseDTO buscarPorId(Long id) {
@@ -95,12 +84,12 @@ public class CategoriaService {
 
     }
 
-    public List<CategoriaDTO> buscarPorNome(String nome) {
-        List<Categoria> categorias = categoriaRepository.findAllByNomeContainingIgnoreCase(nome);
+    public Page<CategoriaDTO> buscarPorNome(Pageable pageable, String nome) {
+        Page<Categoria> categorias = categoriaRepository.findAllByNomeContainingIgnoreCase(pageable, nome);
         if (categorias.isEmpty()) {
             throw new CategoriaNaoEncontradoException("Nenhuma categoria encontrada com o nome: " + nome);
         }
-        return categorias.stream().map(CategoriaDTO::new).toList();
+        return categorias.map(CategoriaDTO::new);
     }
 
 

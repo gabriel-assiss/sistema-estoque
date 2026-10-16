@@ -9,6 +9,8 @@ import com.projeto.estoque.exception.FornecedorExistenteException;
 import com.projeto.estoque.exception.FornecedorNaoEncontradoException;
 import com.projeto.estoque.repository.FornecedorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +47,8 @@ public class FornecedorService {
         }
     }
 
-    public List<FornecedorResponseDTO> listarTodos() {
-        return fornecedorRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    public Page<FornecedorResponseDTO> listarTodos(Pageable pageable) {
+        return fornecedorRepository.findAll(pageable).map(this::transformarEmResponseDTO);
     }
 
     public FornecedorResponseDTO buscarPorId(Long id) {
@@ -83,12 +85,12 @@ public class FornecedorService {
         return transformarEmResponseDTO(fornecedorRepository.save(fornecedor));
     }
 
-    public List<FornecedorDTO> buscarPorNome(String nome) {
-        List<Fornecedor> fornecedores = fornecedorRepository.findAllByNomeContainingIgnoreCase(nome);
+    public Page<FornecedorDTO> buscarPorNome(String nome, Pageable pageable) {
+        Page<Fornecedor> fornecedores = fornecedorRepository.findAllByNomeContainingIgnoreCase(nome, pageable);
         if (fornecedores.isEmpty()) {
             throw new FornecedorNaoEncontradoException("Nenhum fornecedor encontrado com o nome: " + nome);
         }
-        return fornecedores.stream().map(FornecedorDTO::new).toList();
+        return fornecedores.map(FornecedorDTO::new);
     }
 
 

@@ -2,18 +2,19 @@ package com.projeto.estoque.repository;
 
 import com.projeto.estoque.entity.MovimentacaoEstoque;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface MovimentacaoEstoqueRepository extends JpaRepository<MovimentacaoEstoque, Long> {
-    List<MovimentacaoEstoque> findAllByEstoqueProdutoId(Long produtoId);
+    Page<MovimentacaoEstoque> findAllByEstoqueProdutoId(Long produtoId, Pageable pageable);
 
-    List<MovimentacaoEstoque> findAllByFuncionarioId(Long funcionarioId);
+    Page<MovimentacaoEstoque> findAllByFuncionarioId(Long funcionarioId, Pageable pageable);
 
-    List<MovimentacaoEstoque> findAllByEstoqueProdutoIdAndFuncionarioId(
+    Page<MovimentacaoEstoque> findAllByEstoqueProdutoIdAndFuncionarioId(
             Long produtoId,
-            Long funcionarioId
+            Long funcionarioId,
+            Pageable pageable
     );
 }

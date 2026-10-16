@@ -10,6 +10,8 @@ import com.projeto.estoque.exception.FuncionarioNaoEncontradoException;
 import com.projeto.estoque.repository.FuncionarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +53,8 @@ public class FuncionarioService {
         }
     }
 
-    public List<FuncionarioResponseDTO> listarTodos() {
-        return funcionarioRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    public Page<FuncionarioResponseDTO> listarTodos(Pageable pageable) {
+        return funcionarioRepository.findAll(pageable).map(this::transformarEmResponseDTO);
     }
 
     public FuncionarioResponseDTO buscarPorId(Long id) {
@@ -89,12 +91,12 @@ public class FuncionarioService {
         return transformarEmResponseDTO(funcionarioRepository.save(funcionario));
     }
 
-    public List<FuncionarioDTO> buscarPorNome(String nome) {
-        List<Funcionario> funcionarios = funcionarioRepository.findAllByNomeContainingIgnoreCase(nome);
+    public Page<FuncionarioDTO> buscarPorNome(String nome, Pageable pageable) {
+        Page<Funcionario> funcionarios = funcionarioRepository.findAllByNomeContainingIgnoreCase(nome, pageable);
         if (funcionarios.isEmpty()) {
             throw new FuncionarioNaoEncontradoException("Nenhum funcionário encontrado com o nome: " + nome);
         }
-        return funcionarios.stream().map(FuncionarioDTO::new).toList();
+        return funcionarios.map(FuncionarioDTO::new);
     }
 
 

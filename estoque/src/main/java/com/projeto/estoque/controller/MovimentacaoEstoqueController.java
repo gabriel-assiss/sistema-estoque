@@ -3,6 +3,8 @@ package com.projeto.estoque.controller;
 import com.projeto.estoque.entity.MovimentacaoEstoque;
 import com.projeto.estoque.service.MovimentacaoEstoqueService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +20,18 @@ public class MovimentacaoEstoqueController {
     }
 
     @GetMapping("/funcionario/{funcionarioId}")
-    public ResponseEntity<List<MovimentacaoEstoque>> movimentacaoPorFuncionario(@PathVariable Long funcionarioId) {
-        return ResponseEntity.ok(movimentacaoEstoqueService.movimentacaoPorFuncionario(funcionarioId));
+    public ResponseEntity<Page<MovimentacaoEstoque>> movimentacaoPorFuncionario(@PathVariable Long funcionarioId, Pageable pageable) {
+        return ResponseEntity.ok(movimentacaoEstoqueService.movimentacaoPorFuncionario(funcionarioId, pageable));
     }
 
     @GetMapping("/produto/{produtoId}/funcionario/{funcionarioId}")
-    public ResponseEntity<List<MovimentacaoEstoque>> movimentacaoPorFuncionarioEProduto(
-            @PathVariable Long produtoId, @PathVariable Long funcionarioId) {
-        return ResponseEntity.ok(movimentacaoEstoqueService.movimentacaoPorFuncionarioEProduto(produtoId, funcionarioId));
+    public ResponseEntity<Page<MovimentacaoEstoque>> movimentacaoPorFuncionarioEProduto(
+            @PathVariable Long produtoId, @PathVariable Long funcionarioId, Pageable pageable) {
+        return ResponseEntity.ok(movimentacaoEstoqueService.movimentacaoPorFuncionarioEProduto(produtoId, funcionarioId, pageable));
     }
 
     @GetMapping("/produto/{produtoId}")
-    public ResponseEntity<List<MovimentacaoEstoque>> movimentacaoPorProduto(@PathVariable Long produtoId) {
-        return ResponseEntity.ok(movimentacaoEstoqueService.movimentacaoPorProduto(produtoId));
+    public ResponseEntity<Page<MovimentacaoEstoque>> movimentacaoPorProduto(@PathVariable Long produtoId, Pageable pageable) {
+        return ResponseEntity.ok(movimentacaoEstoqueService.movimentacaoPorProduto(produtoId, pageable));
     }
 }

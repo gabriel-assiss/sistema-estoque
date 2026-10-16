@@ -3,6 +3,8 @@ package com.projeto.estoque.controller;
 import com.projeto.estoque.dto.estoque.EstoqueResponseDTO;
 import com.projeto.estoque.service.EstoqueService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class EstoqueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EstoqueResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(estoqueService.listarTodos());
+    public ResponseEntity<Page<EstoqueResponseDTO>> listarTodos(Pageable pageable) {
+        return ResponseEntity.ok(estoqueService.listarTodos(pageable));
     }
 
     @GetMapping("/{id}")

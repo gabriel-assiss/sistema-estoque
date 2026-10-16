@@ -1,13 +1,14 @@
 package com.projeto.estoque.repository;
 
 import com.projeto.estoque.entity.Produto;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     boolean existsByNome(String nome);
-    List<Produto> findAllByNomeContainingIgnoreCase(String nome);
-    List<Produto> findAllByCategoriaNomeIgnoreCase(String nome);
+    Page<Produto> findAllByNomeContainingIgnoreCase(String nome, Pageable pageable);
+    Page<Produto> findAllByCategoriaNomeIgnoreCase(String nome, Pageable pageable);
 }

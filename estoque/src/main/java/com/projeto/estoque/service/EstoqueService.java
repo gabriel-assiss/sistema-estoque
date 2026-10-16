@@ -8,6 +8,8 @@ import com.projeto.estoque.exception.ProdutoNaoEncontradoExeption;
 import com.projeto.estoque.repository.EstoqueRepository;
 import com.projeto.estoque.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +30,8 @@ public class EstoqueService {
         return new EstoqueResponseDTO(estoque);
     }
 
-    public List<EstoqueResponseDTO> listarTodos() {
-        return estoqueRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    public Page<EstoqueResponseDTO> listarTodos(Pageable pageable) {
+        return estoqueRepository.findAll(pageable).map(this::transformarEmResponseDTO);
     }
 
     public EstoqueResponseDTO buscarPorId(Long id) {

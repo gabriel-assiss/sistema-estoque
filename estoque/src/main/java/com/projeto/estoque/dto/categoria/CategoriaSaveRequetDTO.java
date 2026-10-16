@@ -1,6 +1,9 @@
 package com.projeto.estoque.dto.categoria;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CategoriaSaveRequetDTO {
+    @NotBlank(message = "Nome não pode ser vazio")
     private String nome;
 
     public CategoriaSaveRequetDTO() {

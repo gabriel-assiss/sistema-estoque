@@ -5,6 +5,9 @@ import com.projeto.estoque.dto.categoria.CategoriaResponseDTO;
 import com.projeto.estoque.dto.categoria.CategoriaSaveRequetDTO;
 import com.projeto.estoque.entity.Categoria;
 import com.projeto.estoque.service.CategoriaService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +25,13 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> salvar(@RequestBody CategoriaSaveRequetDTO categoriaDTO) {
+    public ResponseEntity<CategoriaResponseDTO> salvar(@Valid @RequestBody CategoriaSaveRequetDTO categoriaDTO) {
         return new ResponseEntity<>(categoriaService.salvar(categoriaDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(categoriaService.listarTodos());
+    public ResponseEntity<Page<CategoriaResponseDTO>> listarTodos(Pageable pageable) {
+        return ResponseEntity.ok(categoriaService.listarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -37,13 +40,13 @@ public class CategoriaController {
     }
 
     @GetMapping("/ativas")
-    public ResponseEntity<List<CategoriaResponseDTO>> buscarCategoriasAtivas() {
-        return ResponseEntity.ok(categoriaService.buscarCategoriasAtivas());
+    public ResponseEntity<Page<CategoriaResponseDTO>> buscarCategoriasAtivas(Pageable pageable) {
+        return ResponseEntity.ok(categoriaService.buscarCategoriasAtivas(pageable));
     }
 
     @GetMapping("/inativas")
-    public ResponseEntity<List<CategoriaResponseDTO>> buscarCategoriasInativas() {
-        return ResponseEntity.ok(categoriaService.buscarCategoriasInativas());
+    public ResponseEntity<Page<CategoriaResponseDTO>> buscarCategoriasInativas(Pageable pageable) {
+        return ResponseEntity.ok(categoriaService.buscarCategoriasInativas(pageable));
     }
 
     @PutMapping("/{id}")
@@ -58,7 +61,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<CategoriaDTO>> buscarPorNome(@PathVariable String nome) {
-        return ResponseEntity.ok(categoriaService.buscarPorNome(nome));
+    public ResponseEntity<Page<CategoriaDTO>> buscarPorNome(@PathVariable String nome, Pageable pageable) {
+        return ResponseEntity.ok(categoriaService.buscarPorNome(pageable, nome));
     }
 }

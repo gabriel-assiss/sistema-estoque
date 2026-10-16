@@ -4,6 +4,9 @@ import com.projeto.estoque.dto.funcionario.FuncionarioDTO;
 import com.projeto.estoque.dto.funcionario.FuncionarioResponseDTO;
 import com.projeto.estoque.dto.funcionario.FuncionarioSaveRequetDTO;
 import com.projeto.estoque.service.FuncionarioService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +24,13 @@ public class FuncionarioController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity<FuncionarioResponseDTO> salvar(@RequestBody FuncionarioSaveRequetDTO funcionarioDTO) {
+    public ResponseEntity<FuncionarioResponseDTO> salvar(@Valid @RequestBody FuncionarioSaveRequetDTO funcionarioDTO) {
         return new ResponseEntity<>(funcionarioService.salvar(funcionarioDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<List<FuncionarioResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(funcionarioService.listarTodos());
+    public ResponseEntity<Page<FuncionarioResponseDTO>> listarTodos(Pageable pageable) {
+        return ResponseEntity.ok(funcionarioService.listarTodos(pageable));
     }
 
     @GetMapping("/buscaid/{id}")
@@ -51,7 +54,7 @@ public class FuncionarioController {
     }
 
     @GetMapping("/buscanome/{nome}")
-    public ResponseEntity<List<FuncionarioDTO>> buscarPorNome(@PathVariable String nome) {
-        return ResponseEntity.ok(funcionarioService.buscarPorNome(nome));
+    public ResponseEntity<Page<FuncionarioDTO>> buscarPorNome(@PathVariable String nome, Pageable pageable) {
+        return ResponseEntity.ok(funcionarioService.buscarPorNome(nome, pageable));
     }
 }

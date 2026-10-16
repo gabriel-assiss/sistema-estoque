@@ -7,6 +7,8 @@ import com.projeto.estoque.repository.FuncionarioRepository;
 import com.projeto.estoque.repository.MovimentacaoEstoqueRepository;
 import com.projeto.estoque.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -24,26 +26,27 @@ public class MovimentacaoEstoqueService {
     }
 
 
-    public List<MovimentacaoEstoque> movimentacaoPorFuncionario(Long funcionarioId){
+    public Page<MovimentacaoEstoque> movimentacaoPorFuncionario(Long funcionarioId, Pageable pageable){
         if(!funcionarioRepository.existsById(funcionarioId)){
             throw new FuncionarioNaoEncontradoException("funcionario não existe");
         }
 
-        return movimentacaoEstoqueRepository.findAllByFuncionarioId(funcionarioId);
+        return movimentacaoEstoqueRepository.findAllByFuncionarioId(funcionarioId, pageable);
     }
-    public List<MovimentacaoEstoque> movimentacaoPorFuncionarioEProduto(Long produtoId,
-                                                                        Long funcionarioId){
+    public Page<MovimentacaoEstoque> movimentacaoPorFuncionarioEProduto(Long produtoId,
+                                                                         Long funcionarioId,
+                                                                         Pageable pageable){
         if(!funcionarioRepository.existsById(funcionarioId) && !produtoRepository.existsById(produtoId)){
             throw new FuncionarioNaoEncontradoException("funcionario e/ou produto não existe");
         }
 
-        return movimentacaoEstoqueRepository.findAllByEstoqueProdutoIdAndFuncionarioId(produtoId,funcionarioId);
+        return movimentacaoEstoqueRepository.findAllByEstoqueProdutoIdAndFuncionarioId(produtoId, funcionarioId, pageable);
     }
 
-    public List<MovimentacaoEstoque> movimentacaoPorProduto(Long produtoId){
+    public Page<MovimentacaoEstoque> movimentacaoPorProduto(Long produtoId, Pageable pageable){
         if (!produtoRepository.existsById(produtoId)){
             throw new ProdutoNaoEncontradoExeption("Produto não encontrado");
         }
-        return movimentacaoEstoqueRepository.findAllByEstoqueProdutoId(produtoId);
+        return movimentacaoEstoqueRepository.findAllByEstoqueProdutoId(produtoId, pageable);
     }
 }

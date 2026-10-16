@@ -15,6 +15,8 @@ import com.projeto.estoque.repository.EstoqueRepository;
 import com.projeto.estoque.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,17 +51,14 @@ public class ProdutoService {
     }
 
 
-    public List<ProdutoResponseDTO> buscarPorCategoria(String categoriaNome){
-        List<Produto> produtos = produtoRepository.findAllByCategoriaNomeIgnoreCase(categoriaNome);
+    public Page<ProdutoResponseDTO> buscarPorCategoria(String categoriaNome, Pageable pageable){
+        Page<Produto> produtos = produtoRepository.findAllByCategoriaNomeIgnoreCase(categoriaNome, pageable);
 
         if (produtos.isEmpty()){
             throw  new ProdutoNaoEncontradoExeption("Nenhum produto encrontrado para a categoria "+ categoriaNome);
         }
 
-        return produtos
-                .stream()
-                .map(this::transformarEmResponseDTO)
-                .toList();
+        return produtos.map(this::transformarEmResponseDTO);
     }
 
     @Transactional
@@ -84,8 +83,8 @@ public class ProdutoService {
 
     }
 
-    public List<ProdutoResponseDTO> listarTodos() {
-        return produtoRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    public Page<ProdutoResponseDTO> listarTodos(Pageable pageable) {
+        return produtoRepository.findAll(pageable).map(this::transformarEmResponseDTO);
     }
 
     public ProdutoResponseDTO buscarPorId(Long id) {
@@ -126,12 +125,12 @@ public class ProdutoService {
         produtoRepository.deleteById(id);
     }
 
-    public List<ProdutoDTO> buscarPorNome(String nome) {
-        List<Produto> produtos = produtoRepository.findAllByNomeContainingIgnoreCase(nome);
+    public Page<ProdutoDTO> buscarPorNome(String nome, Pageable pageable) {
+        Page<Produto> produtos = produtoRepository.findAllByNomeContainingIgnoreCase(nome, pageable);
         if (produtos.isEmpty()) {
             throw new ProdutoNaoEncontradoExeption("Nenhum produto encontrado com o nome: " + nome);
         }
-        return produtos.stream().map(ProdutoDTO::new).toList();
+        return produtos.map(ProdutoDTO::new);
     }
 
 

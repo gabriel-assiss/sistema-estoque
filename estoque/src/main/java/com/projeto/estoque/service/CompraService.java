@@ -9,6 +9,8 @@ import com.projeto.estoque.enums.TipoMovimentacao;
 import com.projeto.estoque.exception.*;
 import com.projeto.estoque.repository.*;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -130,8 +132,8 @@ public class CompraService {
 
     }
 
-    public List<CompraResponseDTO> listarTodos() {
-        return compraRepository.findAll().stream().map(this::transformarEmResponseDTO).toList();
+    public Page<CompraResponseDTO> listarTodos(Pageable pageable) {
+        return compraRepository.findAll(pageable).map(this::transformarEmResponseDTO);
     }
 
     public CompraResponseDTO buscarPorId(Long id) {
@@ -139,22 +141,20 @@ public class CompraService {
                 () -> new CompraNaoEncontradaException("Compra não encontrada")
         ));
     }
-    public List<CompraResponseDTO> buscarPorFuncionario(Long id) {
+    public Page<CompraResponseDTO> buscarPorFuncionario(Long id, Pageable pageable) {
         Funcionario funcionario  = funcionarioRepository.findById(id).orElseThrow(
                 ()-> new FuncionarioNaoEncontradoException("Funcionario nao encontrado")
         );
 
 
-        return compraRepository.findByFuncionario(funcionario).orElse(List.of())
-                .stream().map(this::transformarEmResponseDTO).toList();
+        return compraRepository.findByFuncionario(funcionario, pageable).map(this::transformarEmResponseDTO);
     }
 
-    public List<CompraResponseDTO> buscarPorFornecedor(Long id) {
+    public Page<CompraResponseDTO> buscarPorFornecedor(Long id, Pageable pageable) {
         Fornecedor fornecedor =  fornecedorRepository.findById(id).orElseThrow(
                 ()-> new FornecedorNaoEncontradoException("Fornecedor nao encontrado")
         );
-        return compraRepository.findByFornecedor(fornecedor).orElse(List.of())
-                .stream().map(this::transformarEmResponseDTO).toList();
+        return compraRepository.findByFornecedor(fornecedor, pageable).map(this::transformarEmResponseDTO);
     }
 
 

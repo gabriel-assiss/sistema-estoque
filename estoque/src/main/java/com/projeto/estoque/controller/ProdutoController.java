@@ -4,14 +4,20 @@ import com.projeto.estoque.dto.produto.ProdutoDTO;
 import com.projeto.estoque.dto.produto.ProdutoResponseDTO;
 import com.projeto.estoque.dto.produto.ProdutoSaveRequetDTO;
 import com.projeto.estoque.service.ProdutoService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/produtos")
+@Validated
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -22,14 +28,14 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<ProdutoResponseDTO> salvar(
-            @RequestBody ProdutoSaveRequetDTO produtoDTO, 
-            @RequestParam int quantidade) {
+            @Valid @RequestBody ProdutoSaveRequetDTO produtoDTO,
+            @RequestParam @Positive(message = "Quantidade em estoque deve ser positiva") int quantidade) {
         return new ResponseEntity<>(produtoService.salvar(produtoDTO, quantidade), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(produtoService.listarTodos());
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarTodos(Pageable pageable) {
+        return ResponseEntity.ok(produtoService.listarTodos(pageable));
     }
 
     @GetMapping("/{id}")
@@ -38,8 +44,8 @@ public class ProdutoController {
     }
 
     @GetMapping("/categoria/{categoriaNome}")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarPorCategoria(@PathVariable String categoriaNome) {
-        return ResponseEntity.ok(produtoService.buscarPorCategoria(categoriaNome));
+    public ResponseEntity<Page<ProdutoResponseDTO>> buscarPorCategoria(@PathVariable String categoriaNome, Pageable pageable) {
+        return ResponseEntity.ok(produtoService.buscarPorCategoria(categoriaNome, pageable));
     }
 
     @PutMapping("/{id}/inativar")
@@ -59,7 +65,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<List<ProdutoDTO>> buscarPorNome(@PathVariable String nome) {
-        return ResponseEntity.ok(produtoService.buscarPorNome(nome));
+    public ResponseEntity<Page<ProdutoDTO>> buscarPorNome(@PathVariable String nome, Pageable pageable) {
+        return ResponseEntity.ok(produtoService.buscarPorNome(nome, pageable));
     }
 }
