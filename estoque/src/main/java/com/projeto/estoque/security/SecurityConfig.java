@@ -1,4 +1,4 @@
-package br.com.projeto.chamados.security;
+package com.projeto.estoque.security;
 
 import com.projeto.estoque.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +22,10 @@ public class SecurityConfig {
     }
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration
-    ) throws Exception {
-
+            AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,

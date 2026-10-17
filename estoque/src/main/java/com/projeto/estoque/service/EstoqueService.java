@@ -7,6 +7,7 @@ import com.projeto.estoque.exception.EstoqueInsuficienteException;
 import com.projeto.estoque.exception.ProdutoNaoEncontradoExeption;
 import com.projeto.estoque.repository.EstoqueRepository;
 import com.projeto.estoque.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,22 +41,25 @@ public class EstoqueService {
 
 
     public void atualizarQuantidadeMais(Long idProduto, int quantidade) {
-        Produto produto = produtoRepository.findById(idProduto).orElseThrow(
-                ()-> new ProdutoNaoEncontradoExeption("produto não encontrado")
-        );
-        Estoque estoque = produto.getEstoque();
-        estoque.setQuantidadeEstoque(estoque.getQuantidadeEstoque()+quantidade);
+
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser positivo");
+        }
+
+        estoqueRepository.adicionarEstoque(idProduto, quantidade);
+
     }
 
+    @Transactional
     public void atualizarQuantidadeMenos(Long idProduto, int quantidade) {
-        Produto produto = produtoRepository.findById(idProduto).orElseThrow(
-                ()-> new ProdutoNaoEncontradoExeption("produto não encontrado")
-        );
-        Estoque estoque = produto.getEstoque();
-        if(estoque.getQuantidadeEstoque()>quantidade){
-            estoque.setQuantidadeEstoque(estoque.getQuantidadeEstoque()-quantidade);
-        }else{
-            throw new EstoqueInsuficienteException("Impossivel realizar subtração, estoque ficará negativo");
+
+        if (quantidade<=0){
+            throw new IllegalArgumentException("Quantidade deve ser maior que 0");
+        }
+        int resposta = estoqueRepository.debitarEstoque(idProduto, quantidade);
+
+        if (resposta==0){
+            throw  new EstoqueInsuficienteException("Estoque insuficiente e/ou produto inexistente");
         }
 
     }

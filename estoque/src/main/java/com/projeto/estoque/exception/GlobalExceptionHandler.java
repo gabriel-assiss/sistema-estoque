@@ -58,4 +58,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> funcionarioexistente(FuncionarioExistenteException ex){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
 }
