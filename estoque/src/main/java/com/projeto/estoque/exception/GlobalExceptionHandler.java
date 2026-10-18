@@ -2,6 +2,7 @@ package com.projeto.estoque.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -59,4 +60,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, String>> handleOptimisticLocking(
+            ObjectOptimisticLockingFailureException ex) {
+
+        Map<String, String> erro = new LinkedHashMap<>();
+
+        erro.put("erro", "Conflito de atualização.");
+        erro.put("mensagem", "Este registro foi modificado por outro usuário. Atualize os dados e tente novamente.");
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
+    }
 }

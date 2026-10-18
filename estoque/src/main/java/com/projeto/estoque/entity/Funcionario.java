@@ -22,6 +22,9 @@ public class Funcionario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Integer versao;
+
     @Column(name = "nome", nullable = false)
     private String nome;
 

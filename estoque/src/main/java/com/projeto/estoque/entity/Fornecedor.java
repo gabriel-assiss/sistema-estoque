@@ -1,15 +1,8 @@
 package com.projeto.estoque.entity;
 
 import com.projeto.estoque.enums.StatusFornecedor;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +23,9 @@ public class Fornecedor {
     @Enumerated(EnumType.STRING)
     @Column(name = "status_fornecedor")
     private StatusFornecedor statusFornecedor;
+
+    @Version
+    private Integer versao;
 
     @OneToMany(mappedBy = "fornecedor")
     private List<Compra> compras = new ArrayList<>();
