@@ -12,22 +12,22 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
     @Modifying
     @Query("""
         UPDATE Estoque e
-        SET e.quantidade = e.quantidade - :quantidade
+        SET e.quantidadeEstoque = e.quantidadeEstoque - :quantidadeEstoque
         WHERE e.produto.id = :produtoId
-        AND e.quantidade >= :quantidade
+        AND e.quantidadeEstoque >= :quantidadeEstoque
     """)
     int debitarEstoque(
             @Param("produtoId") Long produtoId,
-            @Param("quantidade") Integer quantidade
+            @Param("quantidadeEstoque") Integer quantidadeEstoque
     );
 
 
     @Modifying
     @Query("""
     UPDATE Estoque e
-    SET e.quantidadeEstoque = e.quantidadeEstoque + :quantidade
+    SET e.quantidadeEstoque = e.quantidadeEstoque + :quantidadeEstoque
     WHERE e.produto.id = :idProduto
 """)
-    int adicionarEstoque(Long idProduto, Integer quantidade);
+    int adicionarEstoque(Long idProduto, Integer quantidadeEstoque);
 
 }

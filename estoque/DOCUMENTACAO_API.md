@@ -472,63 +472,7 @@ Registra uma nova compra de mercadorias.
     }
   ]
 }
-```
-*(Nota: os campos `funcionario` e `fornecedor` recebem os IDs correspondentes).*
-
-- **Response `201 Created`:**
-```json
-{
-  "id": 1,
-  "dataCompra": "2026-11-04",
-  "statusCompra": "CONCLUIDA"
-}
-```
-
-#### `GET /compras`
-Listagem paginada de compras.
-- **Response `200 OK`:** `Page<CompraResponseDTO>`
-
-#### `GET /compras/{id}`
-Consulta compra por ID.
-- **Response `200 OK`:** `CompraResponseDTO`
-
-#### `GET /compras/funcionario/{id}`
-Lista compras registradas por um funcionário específico.
-- **Response `200 OK`:** `Page<CompraResponseDTO>`
-
-#### `GET /compras/fornecedor/{id}`
-Lista compras feitas com um fornecedor específico.
-- **Response `200 OK`:** `Page<CompraResponseDTO>`
-
-#### `PUT /compras/{id}/cancelar?idFuncionario={idFuncionario}`
-Cancela uma compra concluída.
-- **Efeito:**
-  - Verifica se o estoque atual comporta o estorno (se o saldo for menor que a quantidade comprada, retorna erro).
-  - Subtrai a quantidade dos produtos no estoque.
-  - Registra movimentações de estoque do tipo `MUDANCA`.
-  - Altera status para `CANCELADA`.
-- **Query Param:** `idFuncionario` (Long obrigatório)
-- **Response `200 OK`:** `CompraResponseDTO`
-- **Erros:**
-  - `409 Conflict`: `"Estoque insuficiente para cancelar a compra"`
-  - `400 Bad Request`: `"Status Inválido"` (se a compra já estiver cancelada).
-
----
-
-### 6.8. Movimentações de Estoque (`/movimentacoes`)
-> **Acesso:** `ADMIN` e `PADRAO`.
-
-Endpoints para auditoria e histórico de entradas, saídas e alterações de estoque.
-
-#### `GET /movimentacoes/funcionario/{funcionarioId}`
-Lista movimentações efetuadas por um funcionário.
-- **Path Param:** `funcionarioId` (Long)
-- **Response `200 OK`:** `Page<MovimentacaoEstoque>`
-
-#### `GET /movimentacoes/produto/{produtoId}`
-Lista histórico de movimentações de um determinado produto.
-- **Path Param:** `produtoId` (Long)
-- **Response `200 OK`:** `Page<MovimentacaoEstoque>`
+```AAAAAEstoque>`
 
 #### `GET /movimentacoes/produto/{produtoId}/funcionario/{funcionarioId}`
 Filtra movimentações cruzando produto e funcionário.
