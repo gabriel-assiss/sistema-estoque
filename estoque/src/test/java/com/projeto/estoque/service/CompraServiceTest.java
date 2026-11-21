@@ -179,5 +179,7 @@ class CompraServiceTest {
         itemCompra1.setQuantidade(5);
         List<ItemCompra> itens = Arrays.asList(itemCompra1);
 
+        when(compraRepository.findById(idCompra))
+                .thenReturn(Optional.of(compra));
     }
 }
