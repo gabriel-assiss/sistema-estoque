@@ -4,6 +4,7 @@ import com.projeto.estoque.dto.funcionario.FuncionarioDTO;
 import com.projeto.estoque.dto.funcionario.FuncionarioResponseDTO;
 import com.projeto.estoque.dto.funcionario.FuncionarioSaveRequetDTO;
 import com.projeto.estoque.entity.Funcionario;
+import com.projeto.estoque.enums.RoleFuncionario;
 import com.projeto.estoque.enums.StatusFuncionario;
 import com.projeto.estoque.exception.FuncionarioExistenteException;
 import com.projeto.estoque.exception.FuncionarioNaoEncontradoException;
@@ -31,10 +32,12 @@ public class FuncionarioService {
         Funcionario funcionario = new Funcionario();
 
         funcionario.setStatusFuncionario(StatusFuncionario.ATIVO);
+        funcionario.setNome(funcionarioDTO.getNome());
         funcionario.setCargo(funcionarioDTO.getCargo());
         funcionario.setEmail(funcionarioDTO.getEmail());
         funcionario.setMatricula(funcionarioDTO.getMatricula());
         funcionario.setSenha(passwordEncoder.encode(funcionarioDTO.getSenha()));
+        funcionario.setRoleFuncionario(RoleFuncionario.PADRAO);
 
         return funcionario;
     }

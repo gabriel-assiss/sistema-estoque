@@ -99,8 +99,7 @@ public class CompraService {
                 () -> new FuncionarioNaoEncontradoException("Funcionario não encontrado")
         );
 
-        if (statusAnterior != StatusCompra.CANCELADA
-                && novoStatus == StatusCompra.CANCELADA) {
+        if (statusAnterior != StatusCompra.CANCELADA) {
 
 
 

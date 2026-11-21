@@ -62,7 +62,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public ProdutoResponseDTO salvar(ProdutoSaveRequetDTO produtoDTO,int quantidade) {
+    public ProdutoResponseDTO salvar(ProdutoSaveRequetDTO produtoDTO) {
 
         Produto produto = transformarDTOemProduto(produtoDTO);
         if (produtoRepository.existsByNome(produto.getNome())) {
@@ -75,7 +75,7 @@ public class ProdutoService {
 
         Estoque estoque = new Estoque();
         estoque.setProduto(produtoSalvo);
-        estoque.setQuantidadeEstoque(quantidade);
+        estoque.setQuantidadeEstoque(produtoDTO.getQuantidade());
         produtoSalvo.setEstoque(estoque);
         estoqueRepository.save(estoque);
 

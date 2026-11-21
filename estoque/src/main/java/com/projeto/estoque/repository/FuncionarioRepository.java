@@ -12,5 +12,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     boolean existsByMatricula(String matricula);
     Page<Funcionario> findAllByNomeContainingIgnoreCase(String nome, Pageable pageable);
     Funcionario findByEmail(String email);
-    Boolean existsByRole(RoleFuncionario roleFuncionario);
+    Boolean existsByRoleFuncionario(RoleFuncionario roleFuncionario);
 }

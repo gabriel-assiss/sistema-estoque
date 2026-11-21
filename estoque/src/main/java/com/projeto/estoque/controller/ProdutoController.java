@@ -30,7 +30,7 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> salvar(
             @Valid @RequestBody ProdutoSaveRequetDTO produtoDTO,
             @RequestParam @Positive(message = "Quantidade em estoque deve ser positiva") int quantidade) {
-        return new ResponseEntity<>(produtoService.salvar(produtoDTO, quantidade), HttpStatus.CREATED);
+        return new ResponseEntity<>(produtoService.salvar(produtoDTO), HttpStatus.CREATED);
     }
 
     @GetMapping

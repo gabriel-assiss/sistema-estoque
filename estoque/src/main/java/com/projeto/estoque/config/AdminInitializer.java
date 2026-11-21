@@ -29,7 +29,7 @@ public class AdminInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
 
         boolean existeAdmin = funcionarioRepository
-                .existsByRole(RoleFuncionario.ADMIN);
+                .existsByRoleFuncionario(RoleFuncionario.ADMIN);
 
         if (existeAdmin) {
             System.out.println("Administrador já cadastrado.");
