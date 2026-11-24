@@ -1,7 +1,9 @@
 package com.projeto.estoque.service;
 
+import com.projeto.estoque.dto.compra.CompraResponseDTO;
 import com.projeto.estoque.entity.*;
 import com.projeto.estoque.enums.StatusCompra;
+import com.projeto.estoque.enums.TipoMovimentacao;
 import com.projeto.estoque.exception.CompraNaoEncontradaException;
 import com.projeto.estoque.exception.EstoqueInsuficienteException;
 import com.projeto.estoque.exception.FuncionarioNaoEncontradoException;
@@ -9,16 +11,17 @@ import com.projeto.estoque.exception.StatusInvalidoException;
 import com.projeto.estoque.repository.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -158,7 +161,7 @@ class CompraServiceTest {
         );
 
     }
-
+    @Test
     void deveCancelarCompraQuandoEstoqueForSuficiente(){
         Long idCompra = 1L;
         Long idFuncionario = 2L;
@@ -181,5 +184,31 @@ class CompraServiceTest {
 
         when(compraRepository.findById(idCompra))
                 .thenReturn(Optional.of(compra));
+        when(funcionarioRepository.findById(idFuncionario))
+                .thenReturn(Optional.of(funcionario));
+        when(itemCompraRepository.findByCompra(compra))
+                .thenReturn(itens);
+        when(compraRepository.save(compra))
+                .thenReturn(compra);
+
+        CompraResponseDTO resultado =
+                compraService.cancelar(idCompra, idFuncionario);
+
+        ArgumentCaptor<MovimentacaoEstoque> movimentacaoCaptor =
+                ArgumentCaptor.forClass(MovimentacaoEstoque.class);
+
+        assertEquals(25, produto1.getEstoque().getQuantidadeEstoque());
+        verify(movimentacaoEstoqueRepository,times(1)).save(movimentacaoCaptor.capture());
+        assertEquals(StatusCompra.CANCELADA,resultado.getStatusCompra());
+        assertNotNull(resultado);
+        assertEquals(5,movimentacaoCaptor.getValue().getQuantidade());
+        assertEquals(TipoMovimentacao.MUDANCA,movimentacaoCaptor.getValue().getTipoDeMovimentacao());
+        assertSame(funcionario,movimentacaoCaptor.getValue().getFuncionario());
+        assertSame(estoque,movimentacaoCaptor.getValue().getEstoque());
+
+
+
     }
+
+
 }
